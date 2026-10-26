@@ -1,1 +1,764 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vayusodh Logistics ERP</title>
+
+<style>
+:root {
+  --navy: #10213a;
+  --blue: #2563eb;
+  --bg: #f3f6fb;
+  --white: #ffffff;
+  --text: #172033;
+  --muted: #64748b;
+  --border: #e2e8f0;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+.app { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 245px;
+  background: var(--navy);
+  color: white;
+  padding: 24px 14px;
+  flex-shrink: 0;
+}
+.brand { font-size: 20px; font-weight: bold; padding: 0 10px; }
+.brand small {
+  display: block;
+  color: #a8c7ff;
+  font-size: 11px;
+  margin-top: 8px;
+}
+.nav-title {
+  margin: 28px 10px 10px;
+  font-size: 11px;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+.nav {
+  display: block;
+  padding: 12px;
+  margin: 4px 0;
+  border-radius: 7px;
+  color: #dbeafe;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+.nav:hover, .nav.active { background: #25456d; color: white; }
+.main { flex: 1; min-width: 0; }
+.topbar {
+  background: white;
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.topbar h2 { margin: 0; font-size: 20px; }
+.content { padding: 26px; }
+.muted { color: var(--muted); font-size: 13px; }
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 16px;
+  margin: 22px 0;
+}
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.stat-label { color: var(--muted); font-size: 13px; }
+.stat-number { font-size: 29px; font-weight: bold; margin: 12px 0 5px; }
+.panel {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-top: 20px;
+  overflow: hidden;
+}
+.panel-head {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.panel-head h3 { margin: 0; }
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; }
+input, select, textarea {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  font: inherit;
+  min-width: 0;
+}
+button {
+  padding: 10px 14px;
+  background: var(--blue);
+  color: white;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+}
+button:hover { opacity: .9; }
+button.secondary { background: #e8eef7; color: var(--navy); }
+button.danger { background: #dc2626; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 900px; }
+th, td {
+  text-align: left;
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+th { background: #f8fafc; color: #64748b; }
+.badge {
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  background: #e2e8f0;
+  white-space: nowrap;
+}
+.delivered { background: #dcfce7; color: #166534; }
+.transit { background: #dbeafe; color: #1d4ed8; }
+.pending { background: #fef3c7; color: #92400e; }
+.cancelled { background: #fee2e2; color: #991b1b; }
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.form-grid label { display: grid; gap: 7px; font-size: 13px; }
+.form-grid .full { grid-column: 1 / -1; }
+.actions { display: flex; gap: 6px; }
+.hidden { display: none !important; }
+.section { display: none; }
+.section.active { display: block; }
+.empty { padding: 30px; text-align: center; color: var(--muted); }
+@media(max-width: 900px) {
+  .sidebar { width: 190px; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .content { padding: 16px; }
+}
+@media(max-width: 600px) {
+  .app { display: block; }
+  .sidebar { width: 100%; padding: 15px; }
+  .nav-title { margin-top: 15px; }
+  .nav-list { display: flex; overflow-x: auto; }
+  .nav { white-space: nowrap; }
+  .stats { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .card { padding: 13px; }
+  .stat-number { font-size: 23px; }
+  .topbar { padding: 16px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-grid .full { grid-column: auto; }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      VAYUSODH
+      <small>LOGISTICS ERP PORTAL</small>
+    </div>
+
+    <div class="nav-title">Main Menu</div>
+    <div class="nav-list">
+      <a class="nav active" data-page="dashboard">▦ Dashboard</a>
+      <a class="nav" data-page="shipments">⇄ Shipment Register</a>
+      <a class="nav" data-page="imports">↓ Import Shipments</a>
+      <a class="nav" data-page="exports">↑ Export Shipments</a>
+      <a class="nav" data-page="purchase">▤ PO & MTS</a>
+      <a class="nav" data-page="delivery">✓ Material Delivery</a>
+      <a class="nav" data-page="expenses">₹ Freight & Expenses</a>
+    </div>
+
+    <div class="nav-title">System</div>
+    <a class="nav" data-page="settings">⚙ Portal Information</a>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h2 id="pageTitle">Dashboard</h2>
+        <div class="muted">Logistics & Supply Chain Management</div>
+      </div>
+      <button onclick="openShipmentForm()">+ Add Shipment</button>
+    </header>
+
+    <div class="content">
+
+      <section class="section active" id="dashboard">
+        <h2>Logistics Overview</h2>
+        <div class="muted">Shipment and material movement summary</div>
+
+        <div class="stats">
+          <div class="card">
+            <div class="stat-label">Total Shipments</div>
+            <div class="stat-number" id="totalCount">0</div>
+            <div class="muted">All registered shipments</div>
+          </div>
+          <div class="card">
+            <div class="stat-label">In Transit</div>
+            <div class="stat-number" id="transitCount">0</div>
+            <div class="muted">Currently moving</div>
+          </div>
+          <div class="card">
+            <div class="stat-label">Pending Delivery</div>
+            <div class="stat-number" id="pendingCount">0</div>
+            <div class="muted">Awaiting completion</div>
+          </div>
+          <div class="card">
+            <div class="stat-label">Delivered</div>
+            <div class="stat-number" id="deliveredCount">0</div>
+            <div class="muted">Successfully delivered</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Recent Shipments</h3>
+            <button class="secondary" onclick="showPage('shipments')">
+              View All
+            </button>
+          </div>
+          <div id="recentTable"></div>
+        </div>
+      </section>
+
+      <section class="section" id="shipments">
+        <h2>Shipment Register</h2>
+        <p class="muted">Manage courier, transport, AWB and delivery details.</p>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>All Shipments</h3>
+            <div class="toolbar">
+              <input id="searchBox" placeholder="Search PO, AWB, vendor..."
+                     oninput="renderShipments()">
+              <select id="statusFilter" onchange="renderShipments()">
+                <option value="">All Statuses</option>
+                <option>Pending</option>
+                <option>In Transit</option>
+                <option>Delivered</option>
+                <option>Cancelled</option>
+              </select>
+              <button onclick="exportCSV()">Export CSV</button>
+            </div>
+          </div>
+          <div id="shipmentTable"></div>
+        </div>
+      </section>
+
+      <section class="section" id="imports">
+        <h2>Import Shipments</h2>
+        <p class="muted">International inbound shipments, customs and AWB.</p>
+        <div id="importTable"></div>
+      </section>
+
+      <section class="section" id="exports">
+        <h2>Export Shipments</h2>
+        <p class="muted">Outbound shipments and shipping bill tracking.</p>
+        <div id="exportTable"></div>
+      </section>
+
+      <section class="section" id="purchase">
+        <h2>Purchase Order & MTS</h2>
+        <div class="card">
+          <h3>Purchase Order / Material Tracking</h3>
+          <p class="muted">
+            Purchase order number, PO date, vendor, material description,
+            quantity, MTS reference and procurement status.
+          </p>
+          <p>Purchase order management module — planned for the next phase.</p>
+        </div>
+      </section>
+
+      <section class="section" id="delivery">
+        <h2>Material Delivery</h2>
+        <div class="card">
+          <h3>Delivery & GRN Register</h3>
+          <p class="muted">
+            Material received date, customer, delivery challan,
+            received quantity, GRN number and proof of delivery.
+          </p>
+          <p>Material receipt and delivery module — planned for the next phase.</p>
+        </div>
+      </section>
+
+      <section class="section" id="expenses">
+        <h2>Freight & Expenses</h2>
+        <div class="card">
+          <h3>Logistics Cost Register</h3>
+          <p class="muted">
+            Freight charges, insurance, courier expenses, vehicle hire,
+            customs duty and other shipment-related charges.
+          </p>
+          <p>Expense entry and reporting module — planned for the next phase.</p>
+        </div>
+      </section>
+
+      <section class="section" id="settings">
+        <h2>Portal Information</h2>
+        <div class="card">
+          <h3>Vayusodh Applied Systems & Technologies LLP</h3>
+          <p>Department: Logistics & Supply Chain</p>
+          <p>Portal: Logistics ERP</p>
+          <p>Version: 1.0 Prototype</p>
+          <p class="muted">
+            This version stores data in the current browser only.
+            It does not yet have user accounts or a shared database.
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- Add Shipment Form -->
+<div id="shipmentModal" class="hidden"
+     style="position:fixed;inset:0;background:#0008;overflow:auto;padding:20px;z-index:10">
+  <div class="card" style="max-width:720px;margin:30px auto">
+    <div class="panel-head">
+      <h3 id="formTitle">Add Shipment</h3>
+      <button class="secondary" onclick="closeShipmentForm()">Close</button>
+    </div>
+
+    <form id="shipmentForm" class="form-grid">
+      <label>Shipment Type
+        <select name="type" required>
+          <option>Import</option>
+          <option>Export</option>
+          <option>Inland</option>
+        </select>
+      </label>
+
+      <label>PO Number
+        <input name="po" placeholder="PO-2026-001" required>
+      </label>
+
+      <label>Invoice Number
+        <input name="invoice" placeholder="Invoice number">
+      </label>
+
+      <label>AWB / Tracking Number
+        <input name="awb" placeholder="AWB or tracking number">
+      </label>
+
+      <label>Shipping Bill Number
+        <input name="shippingBill" placeholder="Shipping bill number">
+      </label>
+
+      <label>E-Way Bill Number
+        <input name="eway" placeholder="E-way bill number">
+      </label>
+
+      <label>Customer Name
+        <input name="customer" placeholder="Customer">
+      </label>
+
+      <label>Vendor Name
+        <input name="vendor" placeholder="Vendor">
+      </label>
+
+      <label>Courier / Transport Name
+        <input name="transport" placeholder="DHL, FedEx, TCI, etc.">
+      </label>
+
+      <label>Mode of Transport
+        <select name="mode">
+          <option>Air</option>
+          <option>Sea</option>
+          <option>Road</option>
+          <option>Rail</option>
+          <option>Courier</option>
+        </select>
+      </label>
+
+      <label>Origin
+        <input name="origin" placeholder="Origin location">
+      </label>
+
+      <label>Destination
+        <input name="destination" placeholder="Destination location">
+      </label>
+
+      <label>Shipment Date
+        <input name="date" type="date">
+      </label>
+
+      <label>Delivery Status
+        <select name="status">
+          <option>Pending</option>
+          <option>In Transit</option>
+          <option>Delivered</option>
+          <option>Cancelled</option>
+        </select>
+      </label>
+
+      <label>Freight Charges (INR)
+        <input name="freight" type="number" min="0" step="0.01" value="0">
+      </label>
+
+      <label>Insurance Charges (INR)
+        <input name="insurance" type="number" min="0" step="0.01" value="0">
+      </label>
+
+      <label>Customs Duty (INR)
+        <input name="duty" type="number" min="0" step="0.01" value="0">
+      </label>
+
+      <label>Vehicle Number
+        <input name="vehicle" placeholder="Vehicle number">
+      </label>
+
+      <label class="full">Remarks
+        <textarea name="remarks" rows="3"
+                  placeholder="Shipment notes or delivery details"></textarea>
+      </label>
+
+      <div class="full toolbar">
+        <button type="submit">Save Shipment</button>
+        <button type="button" class="secondary"
+                onclick="closeShipmentForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// VAYUSODH LOGISTICS ERP - FRONTEND PROTOTYPE
+
+const STORAGE_KEY = "vayusodh_logistics_shipments_v1";
+
+let shipments = [];
+let editingId = null;
+
+try {
+  shipments = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  if (!Array.isArray(shipments)) shipments = [];
+} catch (error) {
+  shipments = [];
+}
+
+function saveData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(shipments));
+    return true;
+  } catch (error) {
+    alert("Unable to save data in this browser.");
+    return false;
+  }
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+}
+
+function money(value) {
+  return Number(value || 0).toLocaleString("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 2
+  });
+}
+
+function statusClass(status) {
+  return {
+    "Delivered": "delivered",
+    "In Transit": "transit",
+    "Pending": "pending",
+    "Cancelled": "cancelled"
+  }[status] || "";
+}
+
+function showPage(page) {
+  document.querySelectorAll(".section").forEach(section => {
+    section.classList.toggle("active", section.id === page);
+  });
+
+  document.querySelectorAll(".nav[data-page]").forEach(link => {
+    link.classList.toggle("active", link.dataset.page === page);
+  });
+
+  const titles = {
+    dashboard: "Dashboard",
+    shipments: "Shipment Register",
+    imports: "Import Shipments",
+    exports: "Export Shipments",
+    purchase: "PO & MTS",
+    delivery: "Material Delivery",
+    expenses: "Freight & Expenses",
+    settings: "Portal Information"
+  };
+
+  document.getElementById("pageTitle").textContent =
+    titles[page] || "Logistics ERP";
+
+  if (page === "imports") {
+    renderTypeTable("Import", "importTable");
+  }
+  if (page === "exports") {
+    renderTypeTable("Export", "exportTable");
+  }
+}
+
+document.querySelectorAll(".nav[data-page]").forEach(link => {
+  link.addEventListener("click", () => showPage(link.dataset.page));
+});
+
+function tableHTML(rows) {
+  if (!rows.length) {
+    return '<div class="empty">No shipments found. Add your first shipment.</div>';
+  }
+
+  return `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>PO Number</th>
+            <th>Type</th>
+            <th>Invoice</th>
+            <th>AWB / Tracking</th>
+            <th>Vendor</th>
+            <th>Transport</th>
+            <th>Freight</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(item => `
+            <tr>
+              <td>${escapeHTML(item.po)}</td>
+              <td>${escapeHTML(item.type)}</td>
+              <td>${escapeHTML(item.invoice)}</td>
+              <td>${escapeHTML(item.awb)}</td>
+              <td>${escapeHTML(item.vendor)}</td>
+              <td>${escapeHTML(item.transport)}</td>
+              <td>${money(item.freight)}</td>
+              <td>
+                <span class="badge ${statusClass(item.status)}">
+                  ${escapeHTML(item.status)}
+                </span>
+              </td>
+              <td>
+                <div class="actions">
+                  <button class="secondary"
+                    onclick="editShipment('${item.id}')">Edit</button>
+                  <button class="danger"
+                    onclick="deleteShipment('${item.id}')">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function renderShipments() {
+  const query = (
+    document.getElementById("searchBox")?.value || ""
+  ).toLowerCase();
+
+  const status = document.getElementById("statusFilter")?.value || "";
+
+  const filtered = shipments.filter(item => {
+    const searchable = [
+      item.po, item.invoice, item.awb, item.vendor,
+      item.customer, item.transport, item.shippingBill
+    ].join(" ").toLowerCase();
+
+    return searchable.includes(query) &&
+      (!status || item.status === status);
+  });
+
+  document.getElementById("shipmentTable").innerHTML =
+    tableHTML(filtered);
+}
+
+function renderTypeTable(type, targetId) {
+  const filtered = shipments.filter(item => item.type === type);
+  document.getElementById(targetId).innerHTML = `
+    <div class="panel">${tableHTML(filtered)}</div>`;
+}
+
+function renderDashboard() {
+  document.getElementById("totalCount").textContent = shipments.length;
+  document.getElementById("transitCount").textContent =
+    shipments.filter(item => item.status === "In Transit").length;
+  document.getElementById("pendingCount").textContent =
+    shipments.filter(item => item.status === "Pending").length;
+  document.getElementById("deliveredCount").textContent =
+    shipments.filter(item => item.status === "Delivered").length;
+
+  document.getElementById("recentTable").innerHTML =
+    tableHTML(shipments.slice(-5).reverse());
+}
+
+function refresh() {
+  renderDashboard();
+  renderShipments();
+  renderTypeTable("Import", "importTable");
+  renderTypeTable("Export", "exportTable");
+}
+
+function openShipmentForm() {
+  editingId = null;
+  document.getElementById("shipmentForm").reset();
+  document.getElementById("formTitle").textContent = "Add Shipment";
+  document.getElementById("shipmentModal").classList.remove("hidden");
+}
+
+function closeShipmentForm() {
+  document.getElementById("shipmentModal").classList.add("hidden");
+}
+
+function editShipment(id) {
+  const item = shipments.find(row => row.id === id);
+  if (!item) return;
+
+  editingId = id;
+  const form = document.getElementById("shipmentForm");
+
+  Object.keys(item).forEach(key => {
+    if (form.elements[key]) {
+      form.elements[key].value = item[key] ?? "";
+    }
+  });
+
+  document.getElementById("formTitle").textContent = "Edit Shipment";
+  document.getElementById("shipmentModal").classList.remove("hidden");
+}
+
+document.getElementById("shipmentForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const data = Object.fromEntries(new FormData(form).entries());
+
+  for (const key of ["freight", "insurance", "duty"]) {
+    data[key] = Number(data[key] || 0);
+    if (!Number.isFinite(data[key]) || data[key] < 0) {
+      alert("Please enter valid non-negative charges.");
+      return;
+    }
+  }
+
+  if (!data.po.trim()) {
+    alert("Please enter the PO number.");
+    return;
+  }
+
+  const existing = editingId
+    ? shipments.find(item => item.id === editingId)
+    : null;
+
+  const record = {
+    ...data,
+    id: editingId || (
+      globalThis.crypto?.randomUUID?.() ||
+      String(Date.now()) + Math.random().toString(16).slice(2)
+    ),
+    createdAt: existing?.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  if (editingId) {
+    shipments = shipments.map(item =>
+      item.id === editingId ? record : item
+    );
+  } else {
+    shipments.push(record);
+  }
+
+  if (!saveData()) return;
+
+  closeShipmentForm();
+  refresh();
+});
+
+function deleteShipment(id) {
+  const item = shipments.find(row => row.id === id);
+  if (!item) return;
+
+  if (!confirm("Delete shipment " + item.po + "?")) return;
+
+  const previous = shipments;
+  shipments = shipments.filter(row => row.id !== id);
+
+  if (!saveData()) {
+    shipments = previous;
+    return;
+  }
+
+  refresh();
+}
+
+function exportCSV() {
+  const headers = [
+    "PO Number", "Type", "Invoice", "AWB", "Shipping Bill",
+    "E-Way Bill", "Customer", "Vendor", "Transport", "Mode",
+    "Origin", "Destination", "Date", "Status", "Freight INR",
+    "Insurance INR", "Customs Duty INR", "Vehicle", "Remarks"
+  ];
+
+  const keys = [
+    "po", "type", "invoice", "awb", "shippingBill", "eway",
+    "customer", "vendor", "transport", "mode", "origin",
+    "destination", "date", "status", "freight", "insurance",
+    "duty", "vehicle", "remarks"
+  ];
+
+  const quote = value =>
+    '"' + String(value ?? "").replace(/"/g, '""') + '"';
+
+  const csv = [
+    headers.map(quote).join(","),
+    ...shipments.map(item => keys.map(key => quote(item[key])).join(","))
+  ].join("\r\n");
+
+  const blob = new Blob(["\uFEFF" + csv], {
+    type: "text/csv;charset=utf-8;"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "Vayusodh_Shipment_Register.csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+refresh();
+</script>
+</body>
+</html>
+
