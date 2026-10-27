@@ -1,177 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vayu Logistics ERP</title>
- <link rel="stylesheet" href="assets_css_style_Version2.css" />
-<script src="assets_js_app_Version2.js"></script>
-</head>
-<body>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="brand">
-        <h2>VAYU ERP</h2>
-      </div>
+<div class="portal">
+  <aside class="sidebar">
+    <h2>VAYU ERP</h2>
+    <ul>
+      <li>Dashboard</li>
+      <li>Project Master</li>
+      <li>Vendor Master</li>
+      <li>Item Master</li>
+      <li>PO Entry</li>
+      <li>PO Register</li>
+      <li>Logistics</li>
+    </ul>
+  </aside>
 
-      <nav>
-        <a class="active" href="#">Dashboard</a>
-        <a href="#">Sales</a>
-        <a href="#">Orders</a>
-        <a href="#">Inventory</a>
-        <a href="#">Logistics</a>
-        <a href="#">Purchases</a>
-        <a href="#">Invoices</a>
-        <a href="#">Customers</a>
-        <a href="#">Reports</a>
-        <a href="#">Settings</a>
-      </nav>
-    </aside>
+  <main class="content">
+    <header>
+      <h3>PO Entry</h3>
+      <button>Save</button>
+    </header>
 
-    <main class="main">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Operations Dashboard</p>
-          <h1>Logistics & Sales Control Center</h1>
-        </div>
-
-        <div class="topbar-actions">
-          <input type="text" placeholder="Search..." />
-          <button class="primary-btn">New Order</button>
-        </div>
-      </header>
-
-      <section class="kpis">
-        <div class="card">
-          <span>Revenue</span>
-          <h3>₹ 12,84,500</h3>
-          <small class="up">+18.2% vs last month</small>
-        </div>
-
-        <div class="card">
-          <span>Open Orders</span>
-          <h3>248</h3>
-          <small class="up">+12 orders today</small>
-        </div>
-
-        <div class="card">
-          <span>Pending Shipments</span>
-          <h3>34</h3>
-          <small class="down">7 delayed</small>
-        </div>
-
-        <div class="card">
-          <span>On-Time Delivery</span>
-          <h3>96.4%</h3>
-          <small class="up">Above target</small>
-        </div>
+    <form>
+      <section>
+        <h4>Project Details</h4>
+        <input placeholder="Project ID">
+        <input placeholder="Project Name">
+        <input placeholder="Site Location">
       </section>
 
-      <section class="dashboard-grid">
-        <div class="panel large">
-          <div class="panel-header">
-            <h3>Sales Trend</h3>
-            <button>Export</button>
-          </div>
-
-          <div class="chart">
-            <div class="bar" style="height: 40%"></div>
-            <div class="bar" style="height: 50%"></div>
-            <div class="bar" style="height: 65%"></div>
-            <div class="bar" style="height: 60%"></div>
-            <div class="bar" style="height: 80%"></div>
-            <div class="bar" style="height: 90%"></div>
-            <div class="bar" style="height: 100%"></div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <h3>Fleet Status</h3>
-            <button>View</button>
-          </div>
-
-          <ul class="fleet-list">
-            <li>
-              <span>Truck 14</span>
-              <strong>In Transit</strong>
-            </li>
-            <li>
-              <span>Truck 22</span>
-              <strong>Loading</strong>
-            </li>
-            <li>
-              <span>Truck 08</span>
-              <strong>Delayed</strong>
-            </li>
-            <li>
-              <span>Truck 19</span>
-              <strong>Delivered</strong>
-            </li>
-          </ul>
-        </div>
+      <section>
+        <h4>Vendor Details</h4>
+        <input placeholder="Vendor Name">
+        <input placeholder="Contact Person">
+        <input placeholder="GST No">
       </section>
 
-      <section class="dashboard-grid lower">
-        <div class="panel">
-          <div class="panel-header">
-            <h3>Recent Orders</h3>
-            <button>All Orders</button>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Route</th>
-                <th>Amount</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>#SO-2041</td>
-                <td>Vayu Traders</td>
-                <td>Chennai → Coimbatore</td>
-                <td>₹ 42,500</td>
-                <td><span class="tag success">Packed</span></td>
-              </tr>
-              <tr>
-                <td>#SO-2042</td>
-                <td>Metro Logistics</td>
-                <td>Bengaluru → Hyderabad</td>
-                <td>₹ 68,200</td>
-                <td><span class="tag warning">In Transit</span></td>
-              </tr>
-              <tr>
-                <td>#SO-2043</td>
-                <td>Ravi Transport</td>
-                <td>Madurai → Chennai</td>
-                <td>₹ 31,900</td>
-                <td><span class="tag danger">Delayed</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <h3>Alerts</h3>
-            <button>Resolve</button>
-          </div>
-
-          <ul class="alert-list">
-            <li>Low stock: Brake Oil</li>
-            <li>3 invoices pending payment</li>
-            <li>Truck 08 is overdue</li>
-            <li>New customer request received</li>
-          </ul>
-        </div>
+      <section>
+        <h4>PO Details</h4>
+        <input placeholder="PO Number">
+        <input placeholder="PO Date">
+        <input placeholder="Project Name">
+        <input placeholder="Vendor Name">
       </section>
-    </main>
-  </div>
 
-  <script src="assets/js/app.js"></script>
-</body>
-</html>
+      <section>
+        <h4>Item Details</h4>
+        <table>
+          <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Rate</th>
+            <th>Tax</th>
+            <th>Total</th>
+          </tr>
+          <tr>
+            <td><input></td>
+            <td><input></td>
+            <td><input></td>
+            <td><input></td>
+            <td><input></td>
+          </tr>
+        </table>
+      </section>
+
+      <button type="submit">Submit PO</button>
+    </form>
+  </main>
+</div>
